@@ -37,11 +37,16 @@ var name_Select = [];
     var element = JSON.parse(localStorage.getItem(select[i].name));
     select[i].options[element].selected = true;
     name_Select += select[i].name + ' ';
-    var tag = document.createElement("div");
-    tag.innerText = (select[i].name + ' ' + select[i].value);
-   //tag.classList.add('del_show_select');
-   var element = document.getElementById("show_info_select");
-   element.appendChild(tag);
+    var firstch = select[i].options[0].value;
+    console.log(firstch);
+    if(select[i].value != firstch) {
+      var tag = document.createElement("div");
+      tag.innerText = (select[i].name + ' ' + select[i].value);
+      //tag.classList.add('del_show_select');
+      var element = document.getElementById("show_info_select");
+      element.appendChild(tag);
+    }
+
 }
 /*
 delete show option select
@@ -49,16 +54,17 @@ delete show option select
 var child_show = document.getElementById("show_info_select").childNodes;
 for (var i = 0; i < child_show.length; i++) {
     child_show[i].addEventListener("click", function(){
+      document.getElementById("show_info_select").removeChild(this);
       var text_child_show = this.textContent.split(" ");
-      var name_split = name_Select.split(" ")
+      var name_split = name_Select.split(" ");
       for (var j = 0; j < name_split.length; j++){
-        //console.log(n[j]);
         if(name_split[j] == text_child_show[0]){
+          console.log(name_split[j]);
           localStorage.setItem( text_child_show[0], JSON.stringify(0));
           select[j].firstChild.selected = true;
-          location.href  = updateUrl(url,text_child_show[0],"0"); 
-        }
+          location.href  = removeURLParameter(url,text_child_show[0]); 
       }
+    }
     });
   }
 
@@ -114,3 +120,36 @@ function updateUrl(url,key,value){
 }
 
 
+/* 
+function removeURLParameter() 
+input: url,key
+output: update url
+*/
+function removeURLParameter(url, parameter) {
+  var urlparts = url.split('?');
+  var urlpartsplit;
+  if(urlparts[1].charAt(0)=="="){
+    urlpartsplit = urlparts[1].replace("=",'');
+  }
+  else{
+    urlpartsplit = urlparts[1];
+  }
+    if (urlparts.length >= 2) {
+
+      var prefix = encodeURIComponent(parameter) + '=';
+      var pars = urlpartsplit.split(/[&;]/g);
+ 
+      //reverse iteration as may be destructive
+      for (var i = pars.length; i-- > 0;) {
+         //idiom for string.startsWith
+         if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+            pars.splice(i, 1);
+         }
+      }
+ 
+      return urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : '');
+   
+  }
+
+  return url;
+}
