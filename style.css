@@ -1,0 +1,20 @@
+#show_info_select{
+    display: flex;
+    cursor: pointer;
+}
+#show_info_select div{
+    margin-top: 5rem;
+    background-color: rgb(247, 238, 238);
+    padding: 0.5rem;
+    margin-right: 1rem;
+    border-radius: 2px;
+    opacity: 0.5;
+}
+#show_info_select div::after{
+    content: "x" ;
+    margin-left: 1rem;
+}
+
+#show_info_select div:hover{
+    opacity:1;
+}
